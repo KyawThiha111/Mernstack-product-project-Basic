@@ -1,7 +1,7 @@
 import {create} from "zustand";
 import dotenv from "dotenv";
 const env = dotenv.config()
-const API_BASE_URL = process.env.NODE_ENV==="development"?"http://localhost:5000":""
+const API_BASE_URL = import.meta.env.MODE==="development"?"http://localhost:5000":""
 
 export const useProductStore = create((set)=>({
     products:[],
