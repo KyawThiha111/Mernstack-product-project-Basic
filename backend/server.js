@@ -1,18 +1,13 @@
 import express from "express";
 import createDB from "./Config/db.js";
 import ProductRoute from "./Route/product.js";
-import cors from "cors";
 const app = express();
 import dotenv from "dotenv";
 import path from "path";
 import {fileURLToPath} from "url"
 const env =dotenv.config();
 const __dirname = path.resolve()
-app.use(cors({
-    origin: "http://localhost:5173", // Allow requests from Vite frontend
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type"]
-}));
+
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
 
@@ -27,6 +22,7 @@ if(process.env.NODE_ENV==="production"){
   })
 }
 app.listen(process.env.SERVER_PORT,()=>{
+    console.log(__dirname)
     createDB()
     console.log(`The server is running on localhost ${process.env.SERVER_PORT}.`)
 })
