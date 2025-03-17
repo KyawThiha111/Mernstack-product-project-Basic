@@ -1,11 +1,13 @@
 import {create} from "zustand";
-
+import dotenv from "dotenv";
+const env = dotenv.config()
+const API_BASE_URL = process.env.NODE_ENV==="development"?"http://localhost:5000":""
 
 export const useProductStore = create((set)=>({
     products:[],
     fetchProducts:async()=>{
      try {
-      const response = await fetch("http://localhost:5000/api/products/displayproducts")
+      const response = await fetch(`${API_BASE_URL}/api/products/displayproducts`)
      const data = await response.json()
      set({products:data.product})
      return {success:true,message:data.product}
@@ -19,7 +21,7 @@ export const useProductStore = create((set)=>({
             return {success:false,message:"Fill the fields!"}
         }
       try {
-        const response = await fetch("http://localhost:5000/api/products/addpost",{
+        const response = await fetch(`${API_BASE_URL}/api/products/addpost`,{
             method:"POST",
             headers:{
                 "Content-Type":"application/json"
@@ -37,7 +39,7 @@ export const useProductStore = create((set)=>({
     },
     updateProduct:async(id,productbody)=>{
      try {
-      const response = await fetch(`http://localhost:5000/api/products/updateproduct/${id}`,{
+      const response = await fetch(`${API_BASE_URL}/api/products/updateproduct/${id}`,{
         method:"PUT",
         headers:{
           "Content-Type":"application/json"
@@ -55,7 +57,7 @@ export const useProductStore = create((set)=>({
     },
     deleteProduct:async(id)=>{
       try {
-        const response = await fetch(`http://localhost:5000/api/products/deleteproduct/${id}`,{
+        const response = await fetch(`${API_BASE_URL}/api/products/deleteproduct/${id}`,{
           method:"DELETE"
         })
         const data = await response.json();
@@ -74,7 +76,7 @@ export const useEachProductStore = create((set)=>(
     matchProduct:null,
     fetchProductById: async (id) => {
       try {
-        const response = await fetch(`http://localhost:5000/api/products/displayeachproduct/${id}`);
+        const response = await fetch(`${API_BASE_URL}/api/products/displayeachproduct/${id}`);
         
         if (!response.ok) throw new Error("Error while fetching!");
     
