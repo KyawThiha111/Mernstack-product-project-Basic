@@ -1,6 +1,7 @@
 import express from "express";
 import createDB from "./Config/db.js";
 import ProductRoute from "./Route/product.js";
+import AdminRoute from "./Route/admin.js"
 const app = express();
 import dotenv from "dotenv";
 import path from "path";
@@ -13,7 +14,8 @@ app.use(express.urlencoded({extended:true}))
 
 /* Products routes */
 app.use("/api/products",ProductRoute)
-
+/* Admin Routes */
+app.use("/api/admins",AdminRoute)
 //this means we deploy this application when 
 if(process.env.NODE_ENV==="production"){
   app.use(express.static(path.join(__dirname,"/frontend/dist")))

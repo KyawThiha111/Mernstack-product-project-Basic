@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useProductStore } from "../zustand_Store/products"; // Import useProductStore
 import UpdateBox from "../Components/Update";
+import AddNote from "../Components/Addnote";
 const SeeEachPost = () => {
     const { matchProduct, fetchProductById, clearFetchProduct } = useEachProductStore();
     const { deleteProduct } = useProductStore(); // Get deleteProduct
@@ -60,6 +61,25 @@ const SeeEachPost = () => {
                     </div>
                 </div>
 
+                {/* Note */}
+                <div>
+                    <h2>Notes</h2>
+                    {
+                        matchProduct?.note.map((eachNote,index)=>{
+                            return(
+                                <div key={index} className="border mb-2 border-black p-3 border-2 gap-2">
+                                    <div>
+                                       <span className="me-2 text-bold">{index+1}.</span> {eachNote}
+                                    </div>
+                                </div>
+                            )
+                        })
+                    }
+                </div>
+                {/* Add Note Component */}
+                <div>
+                   <AddNote postid={id}/>
+                </div>
                 {/* Edit delete part */}
                 <div className="mx-auto w-[100%] py-3 flex justify-end flex-col">
                     <button onClick={() => deleteButton(id)} className="bg-red-400 py-2 text-center px-3 border shadow-xl border-gray-400 border-2">
@@ -70,7 +90,7 @@ const SeeEachPost = () => {
                     </button>
                 </div>
                 </div>
-
+             
                 {/* Edit Part */}
                 {
                     clickEdit&&(

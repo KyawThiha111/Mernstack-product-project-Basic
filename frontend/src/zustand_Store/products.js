@@ -14,9 +14,10 @@ export const useProductStore = create((set)=>({
      }
     },
     createProduct:async(newProduct)=>{
-        if(!newProduct.productname||!newProduct.price||!newProduct.photo){
+        if(!newProduct.productname||!newProduct.price||!newProduct.photo||!newProduct.note){
             return {success:false,message:"Fill the fields!"}
         }
+        if(!newProduct.projectOwner) return {success:false,message:"Error with login token"}
       try {
         const response = await fetch(`/api/products/addpost`,{
             method:"POST",
@@ -27,6 +28,20 @@ export const useProductStore = create((set)=>({
         })
         const data = await response.json();
         set((state)=>({products:[...state.products,data.message]}))
+        console.log("adId",newProduct.projectOwner)
+        console.log("adId",data.message._id)
+        const responseFromPut = await fetch("/api/admins/addpatientstoadmin",{
+          method:"PUT",
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body:JSON.stringify({adminID:newProduct.projectOwner,patientID:data.message._id})
+        })
+        if (!responseFromPut.ok) {
+          throw new Error("Failed to update admin's patients");
+      }
+        const dataFromPut = await responseFromPut.json();
+        console.log(dataFromPut.message.patients)
         alert("Added the data to the database!")
        return {success:true,message:"Added to the database"}
       } catch (error) {

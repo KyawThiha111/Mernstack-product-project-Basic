@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-
+import mongoose from "mongoose";
 const ProductSchema = new Schema({
     productname:{
         type: String,
@@ -11,6 +11,15 @@ const ProductSchema = new Schema({
     },
     photo:{
         type:String,
+        required:true
+    },
+    note:[
+       { type:String,
+        required:true}
+    ],
+    projectOwner:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"admins",
         required:true
     }
 }, {timestamps:true})

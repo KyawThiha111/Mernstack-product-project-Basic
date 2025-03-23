@@ -52,12 +52,12 @@ export const addPost = async(req,res)=>{
     if(!error.isEmpty()){
         return res.status(400).json({success:false,message: error.array()})
     } 
-    const {productname,price,photo} = req.body;
-    if(!productname||!price||!photo){
+    const {productname,price,photo,note,projectOwner} = req.body;
+    if(!productname||!price||!photo||!note||!projectOwner){
         return res.status(400).json({success:false,message:"Data required!"})
     }
    try {
-    const createdData = await Product.create({productname,price:Number(price),photo});
+    const createdData = await Product.create({productname,price:Number(price),photo,note,projectOwner});
     return res.status(201).json({success:true,message:createdData})
 } catch (error) {
      console.log(error)
@@ -78,15 +78,31 @@ export const DeleteProduct = async(req,res)=>{
     }
 }
 
+/* Need to get fixed! */
 export const UpdateProduct = async(req,res)=>{
     const {id} = req.params;
-    const data= req.body;
+    const data= req.body; /* Has to be only for new note  */
+    console.log("data",data)
     if(!mongoose.Types.ObjectId.isValid(id)){
         return res.status(400).json({success:false,message:"Invalid ID"})
     }
     try {
-        const updatedProduct = await Product.findByIdAndUpdate(id,data,{new:true})
+        const updatedProduct = await Product.findByIdAndUpdate(id,{$push:{note:data.newNote}},{new:true})
         return res.status(200).json({success:true,message:"Succesfully updated the product",updatedProduct:updatedProduct})
+    } catch (error) {
+       return res.status(500).json({success:false,message:"Internal server error"})
+    }
+}
+
+
+export const AddnewNote = async(req,res)=>{
+    const {postid,newnote}= req.body; /* Has to be only for new note  */
+    if(!mongoose.Types.ObjectId.isValid(postid)){
+        return res.status(400).json({success:false,message:"Invalid ID"})
+    }
+    try {
+        const updatedProduct = await Product.findByIdAndUpdate(postid,{$push:{note:newnote}},{new:true})
+        return res.status(200).json({success:true,message:"Succesfully added a new note!",updatedProduct:updatedProduct})
     } catch (error) {
        return res.status(500).json({success:false,message:"Internal server error"})
     }
